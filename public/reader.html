@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>PDF Reader</title>
+</head>
+<body>
+
+<button id="toggleNotes">📝 Notes</button>
+
+<div style="display:flex; margin-top:10px;">
+  <iframe id="pdfFrame" width="100%" height="600px"></iframe>
+
+  <div id="notesPanel" style="display:none; width:30%; margin-left:10px;">
+    <textarea id="notesArea" style="width:100%; height:600px;"
+      placeholder="Write notes here..."></textarea>
+  </div>
+</div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+
+  const year = params.get("year");
+  const dept = params.get("dept");
+  const subject = params.get("subject");
+  const unit = params.get("unit");
+  const file = params.get("file");
+
+  const pdfPath =
+    `../data/year${year}/${dept}/${subject}/resources/${unit}/${file}`;
+
+  document.getElementById("pdfFrame").src = pdfPath;
+
+  // Notes key (SUBJECT + PDF)
+  const notesKey = `notes_${subject}_${file}`;
+
+  const notesArea = document.getElementById("notesArea");
+
+  // Load saved notes
+  notesArea.value = localStorage.getItem(notesKey) || "";
+
+  // Auto-save notes
+  notesArea.addEventListener("input", () => {
+    localStorage.setItem(notesKey, notesArea.value);
+  });
+
+  // Toggle notes panel
+  document.getElementById("toggleNotes").onclick = () => {
+    const panel = document.getElementById("notesPanel");
+    panel.style.display = panel.style.display === "none" ? "block" : "none";
+  };
+</script>
+
+</body>
+</html>

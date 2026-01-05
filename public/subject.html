@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Subject</title>
+</head>
+<body>
+
+<h2 id="subjectTitle"></h2>
+<div id="content"></div>
+
+<script>
+  const params = new URLSearchParams(window.location.search);
+  const year = params.get("year");
+  const dept = params.get("dept");
+
+  const subject = params.get("subject");
+
+
+  document.getElementById("subjectTitle").innerText =
+    subject.toUpperCase();
+
+  fetch(`../data/year${year}/${dept}/${subject}/units.json`)
+    .then(res => res.json())
+    .then(units => {
+      const container = document.getElementById("content");
+
+      units.forEach(unit => {
+        const h3 = document.createElement("h3");
+        h3.innerText = unit.title;
+        container.appendChild(h3);
+
+        const ul = document.createElement("ul");
+
+        unit.pdfs.forEach(pdf => {
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+
+          a.href =
+            `reader.html?year=${year}&dept=${dept}&subject=${subject}&unit=${unit.unit}&file=${pdf.file}`;
+
+          a.innerText = pdf.name;
+
+          li.appendChild(a);
+          ul.appendChild(li);
+        });
+
+        container.appendChild(ul);
+      });
+    });
+</script>
+
+</body>
+</html>
