@@ -2,49 +2,77 @@
 <html>
 <head>
   <title>Subject</title>
+  <link rel="stylesheet" href="../assets/css/style.css">
+
 </head>
 <body>
 
 <h2 id="subjectTitle"></h2>
-<div id="content"></div>
+
+<h3>Units</h3>
+<div id="unitsContainer"></div>
+
+<h3>Model Papers</h3>
+<ul id="modelPapersList"></ul>
 
 <script>
   const params = new URLSearchParams(window.location.search);
+
   const year = params.get("year");
   const dept = params.get("dept");
-
   const subject = params.get("subject");
 
-
   document.getElementById("subjectTitle").innerText =
-    subject.toUpperCase();
+    `Subject: ${subject.toUpperCase()}`;
 
+  // Load units
   fetch(`../data/year${year}/${dept}/${subject}/units.json`)
     .then(res => res.json())
     .then(units => {
-      const container = document.getElementById("content");
+      const container = document.getElementById("unitsContainer");
 
       units.forEach(unit => {
-        const h3 = document.createElement("h3");
-        h3.innerText = unit.title;
-        container.appendChild(h3);
+        const unitBlock = document.createElement("div");
 
-        const ul = document.createElement("ul");
+        const unitTitle = document.createElement("h4");
+        unitTitle.innerText = unit.title;
+        unitBlock.appendChild(unitTitle);
+
+        const list = document.createElement("ul");
 
         unit.pdfs.forEach(pdf => {
-          const li = document.createElement("li");
-          const a = document.createElement("a");
+          const item = document.createElement("li");
+          const link = document.createElement("a");
 
-          a.href =
+          link.href =
             `reader.html?year=${year}&dept=${dept}&subject=${subject}&unit=${unit.unit}&file=${pdf.file}`;
+          link.innerText = pdf.name;
 
-          a.innerText = pdf.name;
-
-          li.appendChild(a);
-          ul.appendChild(li);
+          item.appendChild(link);
+          list.appendChild(item);
         });
 
-        container.appendChild(ul);
+        unitBlock.appendChild(list);
+        container.appendChild(unitBlock);
+      });
+    });
+
+  // Load model papers
+  fetch(`../data/year${year}/${dept}/${subject}/model_papers.json`)
+    .then(res => res.json())
+    .then(papers => {
+      const list = document.getElementById("modelPapersList");
+
+      papers.forEach(paper => {
+        const li = document.createElement("li");
+        const a = document.createElement("a");
+
+        a.href =
+          `reader.html?year=${year}&dept=${dept}&subject=${subject}&unit=unit1&file=${paper.file}`;
+        a.innerText = paper.name;
+
+        li.appendChild(a);
+        list.appendChild(li);
       });
     });
 </script>

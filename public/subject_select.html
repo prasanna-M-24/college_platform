@@ -1,31 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Select Department</title>
+  <title>Select Subject</title>
   <link rel="stylesheet" href="../assets/css/style.css">
 </head>
 <body>
 
-<h2>Select Department</h2>
+<h2>Select Subject</h2>
 
 <script>
   const params = new URLSearchParams(window.location.search);
   const year = params.get("year");
+  const dept = params.get("dept");
 
-  if (!year) {
-    document.body.innerHTML = "<p>Year not selected</p>";
+  if (!year || !dept) {
+    document.body.innerHTML = "<p>Invalid navigation</p>";
   }
 </script>
 
 <ul>
-  <li><a href="subject_select.html?dept=cse">CSE</a></li>
-  <li><a href="subject_select.html?dept=ece">ECE</a></li>
+  <li>
+    <a href="subject.html?subject=maths">Maths</a>
+  </li>
 </ul>
 
 <script>
   document.querySelectorAll("a").forEach(link => {
     const url = new URL(link.href);
     url.searchParams.set("year", year);
+    url.searchParams.set("dept", dept);
     link.href = url.toString();
   });
 </script>
