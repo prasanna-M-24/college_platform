@@ -1,0 +1,16 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/
+.idea/
+
+# Future backend stuff
+.env
+
+# Node / build (future-proof)
+node_modules/
+
+# Temporary uploads
+uploads/pending/
